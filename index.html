@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Fancy Text Generator</title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+	<link rel='stylesheet' href='https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css'>
+	<style>
+		.callout {
+			padding: 20px;
+			margin: 15px 0;
+			border: 1px solid #eee;
+			border-left-width: 5px;
+			border-radius: 3px;
+		}
+
+		.callout-info {
+			border-left-color: #17a2b8;
+			text-align: justify;
+ 			text-justify: inter-word;
+		}
+
+		.toast-message {
+			position: fixed;
+			bottom: 20px;
+			left: 50%;
+			transform: translateX(-50%);
+			padding: 10px 20px;
+			border-radius: 10px;
+			background-color: rgba(0, 0, 0, 0.8);
+			color: white;
+			font-size: 16px;
+			font-weight: 500;
+			text-align: center;
+			box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+			opacity: 0;
+			transition: opacity 0.2s, transform 0.2s;
+		}
+
+		.toast-message.show {
+			opacity: 1;
+		}
+
+		.footer {
+			height: auto;
+			position: absolute;
+			left: 0;
+			right: 0;
+			bottom: 0;
+			width: 100%;
+		}
+
+		.fa {
+			color: #E90606;
+			margin: 0 3px;
+			font-size: 16px;
+			animation: pound 0.35s infinite alternate;
+			-webkit-animation: pound 0.35s infinite alternate;
+		}
+		@-webkit-keyframes pound {
+		to {
+			transform: scale(1.1);
+		}
+		}
+		@keyframes pound {
+		to {
+			transform: scale(1.1);
+		}
+		}
+	</style>
+</head>
+<body>
+	<nav class="navbar navbar-expand-sm bg-dark navbar-dark">
+		<a class="navbar-brand" href="#">
+			<img src="logo.png" alt="Logo" style="width:40px;">
+			Fancy Text Generator
+		</a>
+	</nav>
+	<div class="container">
+		<div class="callout callout-info">
+			<strong>Overview</strong><br>The Fancy Text Generator is a simple tool designed to generate stylish text. It serves a variety of purposes, including the creation of stylish usernames for use on gaming and social networking platforms.
+		</div>
+		<div class="form-group">
+			<label for="substitution-list">Select Font</label>
+			<select class="form-control" id="substitution-list">
+				<option value="list1">𝐹𝑜𝓃𝓉 1</option>
+				<option value="list2">ꜰᴏɴᴛ 2</option>
+				<option value="list3">FØЛŤ 3</option>
+				<option value="list4">𝔽𝕠𝕟𝕥 4</option>
+				<option value="list5">̷F̷̷o̷̷n̷̷t̷ 5</option>
+				<option value="list6">FФИΓ 6</option>
+				<option value="list7">𝓕𝓸𝓷𝓽 7</option>
+				<option value="list8">🅵🅾🅽🆃 8</option>
+				<option value="list9">🄵🄾🄽🅃 9</option>
+				<option value="list10">𝔉𝔬𝔫𝔱 10</option>
+			</select>
+		</div>
+		<div class="form-group">
+			<label for="input-text">Enter Text</label>
+			<input type="text" class="form-control" id="input-text">
+		</div>
+		<div class="form-group">
+			<label for="output-text">Generated Text</label>
+		<div class="input-group">
+			<input type="text" class="form-control" id="output-text" readonly>
+		<div class="input-group-append">
+			<button class="btn btn-outline-secondary" type="button" id="copy-button">Copy</button>
+		</div>
+		</div>
+	</div>
+	<div class="footer bg-light py-3" style="width:100%; margin:0px">
+	<div class="text-center">
+		Created with all the <i class="fa fa-heart pulse"></i> in the world by the <b>Combat-Squad</b> members (CODM Clan).
+	</div>
+
+	<div class="toast-message" id="toast-message"></div>
+</body>
+<script>
+	function substitute() {
+	// Define the substitution lists as strings
+	const detectList = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+	
+	const substitutionLists = {
+		'list1': '𝒶,𝒷,𝒸,𝒹,𝑒,𝒻,𝑔,𝒽,𝒾,𝒿,𝓀,𝓁,𝓂,𝓃,𝑜,𝓅,𝓆,𝓇,𝓈,𝓉,𝓊,𝓋,𝓌,𝓍,𝓎,𝓏,𝒜,𝐵,𝒞,𝒟,𝐸,𝐹,𝒢,𝐻,𝐼,𝒥,𝒦,𝐿,𝑀,𝒩,𝒪,𝒫,𝒬,𝑅,𝒮,𝒯,𝒰,𝒱,𝒲,𝒳,𝒴,𝒵,𝟢,𝟣,𝟤,𝟥,𝟦,𝟧,𝟨,𝟩,𝟪,𝟫',
+		'list2': 'ᴀ,ʙ,ᴄ,ᴅ,ᴇ,ꜰ,ɢ,ʜ,ɪ,ᴊ,ᴋ,ʟ,ᴍ,ɴ,ᴏ,ᴘ,Q,ʀ,ꜱ,ᴛ,ᴜ,ᴠ,ᴡ,x,ʏ,ᴢ,ᴀ,ʙ,ᴄ,ᴅ,ᴇ,ꜰ,ɢ,ʜ,ɪ,ᴊ,ᴋ,ʟ,ᴍ,ɴ,ᴏ,ᴘ,Q,ʀ,ꜱ,ᴛ,ᴜ,ᴠ,ᴡ,x,ʏ,ᴢ,0,1,2,3,4,5,6,7,8,9',
+		'list3': 'Λ,Ϧ,ㄈ,Ð,Ɛ,F,Ɠ,н,ɪ,ﾌ,Қ,Ł,௱,Л,Ø,þ,Ҩ,尺,ら,Ť,Ц,Ɣ,Ɯ,χ,Ϥ,Ẕ,Λ,Ϧ,ㄈ,Ð,Ɛ,F,Ɠ,н,ɪ,ﾌ,Қ,Ł,௱,Л,Ø,þ,Ҩ,尺,ら,Ť,Ц,Ɣ,Ɯ,χ,Ϥ,Ẕ,0,1,2,3,4,5,6,7,8,9',
+		'list4': '𝕒,𝕓,𝕔,𝕕,𝕖,𝕗,𝕘,𝕙,𝕚,𝕛,𝕜,𝕝,𝕞,𝕟,𝕠,𝕡,𝕢,𝕣,𝕤,𝕥,𝕦,𝕧,𝕨,𝕩,𝕪,𝕫,𝔸,𝔹,ℂ,𝔻,𝔼,𝔽,𝔾,ℍ,𝕀,𝕁,𝕂,𝕃,𝕄,ℕ,𝕆,ℙ,ℚ,ℝ,𝕊,𝕋,𝕌,𝕍,𝕎,𝕏,𝕐,ℤ,𝟘,𝟙,𝟚,𝟛,𝟜,𝟝,𝟞,𝟟,𝟠,𝟡',
+		'list5': 'a̷,̷b̷,̷c̷,̷d̷,̷e̷,̷f̷,̷g̷,̷h̷,̷i̷,̷j̷,̷k̷,̷l̷,̷m̷,̷n̷,̷o̷,̷p̷,̷q̷,̷r̷,̷s̷,̷t̷,̷u̷,̷v̷,̷w̷,̷x̷,̷y̷,̷z̷,̷A̷,̷B̷,̷C̷,̷D̷,̷E̷,̷F̷,̷G̷,̷H̷,̷I̷,̷J̷,̷K̷,̷L̷,̷M̷,̷N̷,̷O̷,̷P̷,̷Q̷,̷R̷,̷S̷,̷T̷,̷U̷,̷V̷,̷W̷,̷X̷,̷Y̷,̷Z̷,̷0̷,̷1̷,̷2̷,̷3̷,̷4̷,̷5̷,̷6̷,̷7̷,̷8̷,̷9̷',
+		'list6': 'Д,Б,C,D,Ξ,F,G,H,I,J,Ҝ,L,M,И,Ф,P,Ǫ,Я,S,Γ,Ц,V,Щ,Ж,У,Z,Д,Б,C,D,Ξ,F,G,H,I,J,Ҝ,L,M,И,Ф,P,Ǫ,Я,S,Γ,Ц,V,Щ,Ж,У,Z,0,1,2,3,4,5,6,7,8,9',
+		'list7': '𝓪,𝓫,𝓬,𝓭,𝓮,𝓯,𝓰,𝓱,𝓲,𝓳,𝓴,𝓵,𝓶,𝓷,𝓸,𝓹,𝓺,𝓻,𝓼,𝓽,𝓾,𝓿,𝔀,𝔁,𝔂,𝔃,𝓐,𝓑,𝓒,𝓓,𝓔,𝓕,𝓖,𝓗,𝓘,𝓙,𝓚,𝓛,𝓜,𝓝,𝓞,𝓟,𝓠,𝓡,𝓢,𝓣,𝓤,𝓥,𝓦,𝓧,𝓨,𝓩,0,1,2,3,4,5,6,7,8,9',
+		'list8': '🅰,🅱,🅲,🅳,🅴,🅵,🅶,🅷,🅸,🅹,🅺,🅻,🅼,🅽,🅾,🅿,🆀,🆁,🆂,🆃,🆄,🆅,🆆,🆇,🆈,🆉,🅰,🅱,🅲,🅳,🅴,🅵,🅶,🅷,🅸,🅹,🅺,🅻,🅼,🅽,🅾,🅿,🆀,🆁,🆂,🆃,🆄,🆅,🆆,🆇,🆈,🆉,0,1,2,3,4,5,6,7,8,9',
+		'list9': '🄰,🄱,🄲,🄳,🄴,🄵,🄶,🄷,🄸,🄹,🄺,🄻,🄼,🄽,🄾,🄿,🅀,🅁,🅂,🅃,🅄,🅅,🅆,🅇,🅈,🅉,🄰,🄱,🄲,🄳,🄴,🄵,🄶,🄷,🄸,🄹,🄺,🄻,🄼,🄽,🄾,🄿,🅀,🅁,🅂,🅃,🅄,🅅,🅆,🅇,🅈,🅉,0,1,2,3,4,5,6,7,8,9',
+		'list10': '𝔞,𝔟,𝔠,𝔡,𝔢,𝔣,𝔤,𝔥,𝔦,𝔧,𝔨,𝔩,𝔪,𝔫,𝔬,𝔭,𝔮,𝔯,𝔰,𝔱,𝔲,𝔳,𝔴,𝔵,𝔶,𝔷,𝔄,𝔅,ℭ,𝔇,𝔈,𝔉,𝔊,ℌ,ℑ,𝔍,𝔎,𝔏,𝔐,𝔑,𝔒,𝔓,𝔔,ℜ,𝔖,𝔗,𝔘,𝔙,𝔚,𝔛,𝔜,ℨ,0,1,2,3,4,5,6,7,8,9'
+	};
+
+	// Get the input and output text elements
+	const inputText = document.getElementById('input-text').value;
+	const outputText = document.getElementById('output-text');
+
+	// Get the selected substitution list
+	const selectedList = substitutionLists[document.getElementById('substitution-list').value];
+	const substitutionList = selectedList.split(',');
+
+	// Substitute the characters in the input text
+	let substitutedText = '';
+	for (let i = 0; i < inputText.length; i++) {
+		const char = inputText.charAt(i);
+		let substitutedChar = char;
+		if (detectList.indexOf(char) !== -1) {
+			const index = detectList.indexOf(char);
+			substitutedChar = substitutionList[index];
+		}
+		substitutedText += substitutedChar;
+	}
+
+	// Set the output text and copy button behavior
+	outputText.value = substitutedText;
+
+	document.getElementById('copy-button').addEventListener('click', function() {
+		outputText.select();
+		document.execCommand('copy');
+	});
+
+ 	document.getElementById("copy-button").addEventListener("click", function() {
+		outputText.select();
+		document.execCommand("copy");
+		showToastMessage("Output text copied to clipboard");
+  });
+}
+
+	// Bind the substitute function to the input text keyup event
+	document.getElementById('input-text').addEventListener('keyup', substitute);
+
+	// Function to show a toast message
+	function showToastMessage(message) {
+		var toastMessageElement = document.getElementById("toast-message");
+		toastMessageElement.innerText = message;
+		toastMessageElement.classList.add("show");
+		setTimeout(function() {
+		toastMessageElement.classList.remove("show");
+		}, 3000);
+	}
+
+	const select = document.getElementById('substitution-list');
+
+	select.addEventListener('change', substitute);
+
+	</script>
+</html>
